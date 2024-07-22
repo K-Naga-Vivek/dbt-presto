@@ -6,7 +6,7 @@ from dbt.adapters.sql import SQLConnectionManager
 from dbt.logger import GLOBAL_LOGGER as logger
 
 from dataclasses import dataclass
-from typing import Optional, Dict
+from typing import Optional, Dict, Union
 from dbt.helper_types import Port
 
 from datetime import datetime
@@ -26,6 +26,7 @@ class PrestoCredentials(Credentials):
     method: Optional[str] = None
     http_headers: Optional[Dict[str, str]] = None
     http_scheme: Optional[str] = None
+    ssl_verify: Optional[Union[bool, str]] = True
     _ALIASES = {
         'catalog': 'database'
     }
@@ -189,6 +190,7 @@ class PrestoConnectionManager(SQLConnectionManager):
             auth=auth,
             isolation_level=IsolationLevel.AUTOCOMMIT
         )
+        presto_conn._http_session.verify = credentials.ssl_verify
         connection.state = 'open'
         connection.handle = ConnectionWrapper(presto_conn)
         return connection
