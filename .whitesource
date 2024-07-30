@@ -1,0 +1,7 @@
+{
+  "settingsInheritedFrom": "whitesource-config/whitesource-config@master",
+  "scanSettings": {
+  "baseBranches": ["0.21.latest", "ssl_fix"],
+  "configMode": "LOCAL"
+         }                
+}
