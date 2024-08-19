@@ -20,21 +20,12 @@ def _dbt_presto_version():
     with open(_version_path) as f:
         match = re.search(_version_pattern, f.read().strip())
         if match is None:
-            raise ValueError(f'invalid version at {_version_path}')
+            raise ValueError(f'Invalid version at {_version_path}')
         return match.group(1)
 
 
 package_version = _dbt_presto_version()
-description = """The presto adpter plugin for dbt (data build tool)"""
-
-dbt_version = '0.21.1'
-# the package version should be the dbt version, with maybe some things on the
-# ends of it. (0.19.1 vs 0.19.1a1, 0.19.1.1, ...)
-if not package_version.startswith(dbt_version):
-    raise ValueError(
-        f'Invalid setup.py: package_version={package_version} must start with '
-        f'dbt_version={dbt_version}'
-    )
+description = """The Presto adapter plugin for dbt (data build tool)"""
 
 setup(
     name=package_name,
@@ -58,7 +49,7 @@ setup(
         ]
     },
     install_requires=[
-        'dbt-core=={}'.format(dbt_version),
-        'presto-python-client==0.7.0',
+        'dbt-core~=1.8',
+        'presto-python-client==0.8.4',
     ]
 )
