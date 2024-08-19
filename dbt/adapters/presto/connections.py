@@ -14,14 +14,15 @@ from datetime import date, datetime
 import decimal
 import re
 import prestodb
-from prestodb.transaction import IsolationLevel
+from prestodb.transaction import IsolationLevel, Transaction
 import sqlparse
 
-class CustomConnection(Connection):
+class CustomConnection(Connection):    
     def cursor(self):
         if self.isolation_level != IsolationLevel.AUTOCOMMIT:
             if self.transaction is None:
-                self.start_transaction()
+                self.start_custom_transaction()
+        if self.transaction is not None:
             request = self.transaction._request
         else:
             request = self._create_request()
@@ -101,13 +102,13 @@ class ConnectionWrapper(object):
         self.handle.close()
 
     def commit(self):
-        self.handle.commit()
+        pass
 
     def rollback(self):
-        self.handle.rollback()
+        pass
 
     def start_transaction(self):
-        self.handle.start_transaction()
+        pass
 
     def fetchall(self):
         if self._cursor is None:
@@ -185,14 +186,10 @@ class PrestoConnectionManager(SQLConnectionManager):
             raise DbtRuntimeError(str(exc))
 
     def add_begin_query(self):
-        connection = self.get_thread_connection()
-        with self.exception_handler('handle.start_transaction()'):
-            connection.handle.start_transaction()
+        pass
 
     def add_commit_query(self):
-        connection = self.get_thread_connection()
-        with self.exception_handler('handle.commit()'):
-            connection.handle.commit()
+        pass
 
     @classmethod
     def open(cls, connection):
