@@ -1,4 +1,5 @@
 import unittest
+from multiprocessing import get_context
 import dbt.flags as flags
 from dbt.adapters.presto import PrestoAdapter
 
@@ -20,6 +21,8 @@ class TestPrestoAdapter(unittest.TestCase):
                     'schema': 'dbt_test_schema',
                     'method': 'none',
                     'user': 'presto_user',
+                    'ssl_verify': '/path/to/cert',
+                    'http_scheme': 'http',
                 }
             },
             'target': 'test'
@@ -38,12 +41,11 @@ class TestPrestoAdapter(unittest.TestCase):
         }
 
         self.config = config_from_parts_or_dicts(project_cfg, profile_cfg)
-        self._adapter = None
-
+        
+        
     @property
     def adapter(self):
-        if self._adapter is None:
-            self._adapter = PrestoAdapter(self.config)
+        self._adapter = PrestoAdapter(self.config, get_context("spawn"))
         return self._adapter
 
     def test_acquire_connection(self):
@@ -62,3 +64,4 @@ class TestPrestoAdapter(unittest.TestCase):
         self.adapter.connections.thread_connections[key] = mock_connection(
             'master')
         self.assertEqual(len(list(self.adapter.cancel_open_connections())), 0)
+
