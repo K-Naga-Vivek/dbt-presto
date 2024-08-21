@@ -1,0 +1,34 @@
+name: Mend Scan
+
+on:
+  push:
+    branches:
+      - vul_mixcase_fix
+  pull_request:
+    branches:
+      - vul_mixcase_fix
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Mend CLI
+        run: npm install -g mend-cli
+
+      - name: Run Mend Scan
+        run: mend-cli scan --format json --output mend-report.json
+
+      - name: Upload Mend Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: mend-report
+          path: mend-report.json
