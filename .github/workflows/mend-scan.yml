@@ -3,10 +3,12 @@ name: Mend Scan
 on:
   push:
     branches:
-      - vul_mixcase_fix
+      - master
+      - 0.21.latest
   pull_request:
     branches:
-      - vul_mixcase_fix
+      - master
+      - 0.21.latest
 
 jobs:
   scan:
@@ -16,13 +18,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
         with:
-          node-version: '16'
+          python-version: '3.9'
 
       - name: Install Mend CLI
-        run: npm install -g mend-cli
+        run: pip install mend-cli
 
       - name: Run Mend Scan
         run: mend-cli scan --format json --output mend-report.json
