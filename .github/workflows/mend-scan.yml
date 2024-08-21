@@ -10,19 +10,16 @@ on:
 
 jobs:
   scan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.9'
-
       - name: Install Mend CLI
-        run: pip install mend-cli
+        run: |
+          sudo curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend
+          sudo chmod +x /usr/local/bin/mend
 
       - name: Run Mend Scan
         run: mend-cli scan --format json --output mend-report.json
