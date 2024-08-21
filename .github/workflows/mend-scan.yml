@@ -3,12 +3,10 @@ name: Mend Scan
 on:
   push:
     branches:
-      - master
-      - 0.21.latest
+      - vul_mixcase_fix
   pull_request:
     branches:
-      - master
-      - 0.21.latest
+      - vul_mixcase_fix
 
 jobs:
   scan:
