@@ -14,7 +14,7 @@ from datetime import date, datetime
 import decimal
 import re
 import prestodb
-from prestodb.transaction import IsolationLevel, Transaction
+from prestodb.transaction import IsolationLevel
 import sqlparse
 
 class CustomConnection(Connection):    
