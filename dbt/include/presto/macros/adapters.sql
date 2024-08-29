@@ -18,7 +18,7 @@
           NULL as numeric_scale
 
       from
-      {{ relation.information_schema('columns') }}
+      {{ relation.information_schema('columns') | lower() }}
 
       where
         table_name = '{{ relation.name }}'
